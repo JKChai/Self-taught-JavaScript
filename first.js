@@ -1,4 +1,4 @@
 // write JavaScript
-let var = 'Hello World'
+var Hello = 'Hello World'
 
-console.log(var)
+console.log(Hello)
