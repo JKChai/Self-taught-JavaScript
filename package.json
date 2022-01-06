@@ -1,0 +1,24 @@
+{
+  "name": "self-taught-javascript",
+  "version": "1.0.0",
+  "description": "Keep track of JavaScript learning process",
+  "main": "app.js",
+  "scripts": {
+    "start": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JKChai/Self-taught-JavaScript.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JKChai/Self-taught-JavaScript/issues"
+  },
+  "homepage": "https://github.com/JKChai/Self-taught-JavaScript#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
