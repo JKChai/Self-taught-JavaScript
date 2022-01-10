@@ -1,4 +1,4 @@
 // write JavaScript
-var Hello = 'Hello World'
+var Hello = "Hello World";
 
-console.log(Hello)
+console.log(Hello);
