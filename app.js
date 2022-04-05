@@ -1,25 +1,47 @@
-var a = ["dog", "cat", "hen"];
-console.log(a.length); // 3
+const express = require("express");
 
-a[100] = "horse";
+const app = express();
 
-// differences between for...of & for...in
-for (const currentValue of a) {
-  // Do something with currentValue
-  // iterate over elements
-  console.log(currentValue);
-}
+// http verb/method
+/*
+app.get();
+app.post();
+app.put();
+app.delete();
+*/
 
-for (const currentValue in a) {
-  // Do something with currentValue
-  // iterate over indices
-  console.log(currentValue);
-}
+// create course object
+const courses = [
+  { id: 1, name: "course1" },
+  { id: 2, name: "course2" },
+  { id: 3, name: "course3" },
+];
 
-// Using forEach method introduces in ECMAScript5
-["dog", "cat", "hen"].forEach(function (currentValue, index, array) {
-  // Do something with currentValue or array[index]
-  console.log(currentValue);
-  console.log(index);
-  console.log(array);
+app.get("/", (req, res) => {
+  res.send("Hello World");
 });
+
+app.get("/api/courses", (req, res) => {
+  res.send(courses);
+});
+
+app.get("/api/courses/:id", (req, res) => {
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course)
+    res.status(404).send("The course with the given ID was not found!");
+  res.send(course);
+});
+
+// colon indicates parameter for necessary
+app.get("/api/course/:year/:month", (req, res) => {
+  res.send(req.params);
+});
+
+// query parameter for optional objects
+// localhost:3090/api/course/2022/4?sortBY=Name
+app.get("/api/course/:year/:month", (req, res) => {
+  res.send(req.query);
+});
+
+port = process.env.PORT || 3090;
+app.listen(port, () => console.log(`Listening on port ${port}...`));

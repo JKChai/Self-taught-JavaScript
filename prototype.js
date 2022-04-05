@@ -4,6 +4,8 @@ function Foo() {}
 function Bar() {}
 function Baz() {}
 
+// Bar created using Foo blueprint
+// Baz created using Bar blueprint
 Bar.prototype = Object.create(Foo.prototype);
 Baz.prototype = Object.create(Bar.prototype);
 
@@ -27,11 +29,23 @@ console.log(Object.prototype.isPrototypeOf(baz)); // true
 // INHERITING PROPERTIES
 
 // Let's create an object o from function F with its own properties a and b:
+// What happened?
+// F function is declared an automatically has a prototype created
+// This prototype property is an object that contains a constructor property
+// & have value of F function: F.prototype.constructor = F
 let F = function () {
   this.a = 1;
   this.b = 2;
 };
+
+// When F is called with new keyword
+// the new object, o, inherit all properties from F.prototype
 let o = new F(); // {a: 1, b: 2}
+
+// From the above
+// F.prototype is called prototype object or prototype of o
+// that is F.prototype === o.__proto__ is true
+// thus prototype is to access the object
 
 // add properties in F function's prototype
 F.prototype.b = 3;

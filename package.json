@@ -20,5 +20,8 @@
   "homepage": "https://github.com/JKChai/Self-taught-JavaScript#readme",
   "devDependencies": {
     "lite-server": "^2.6.1"
+  },
+  "dependencies": {
+    "express": "^4.17.3"
   }
 }
