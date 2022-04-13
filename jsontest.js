@@ -1,5 +1,5 @@
 var express = require("express");
-// var _ = require('lodash');
+var _ = require("lodash");
 
 // initialize
 const app = express();
