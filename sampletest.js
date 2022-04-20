@@ -12,6 +12,33 @@ app.use(express.json());
 var countryTimeseries = require("./data/country-series");
 var timeseries = require("./data/timeseries");
 
+// update unix timestamp into most recent timestamp based on today's date
+// notice that decreaser is to use to give interval distance to each data point
+var now = Date.now();
+
+for (var i = timeseries.length - 1; i >= 0; i--) {
+  // starting from the last items
+  var series = timeseries[i];
+  var decreaser = 0;
+  for (var y = series.datapoints.length - 1; y >= 0; y--) {
+    // set interval distance for each data point based on seconds
+    // rounding up when dividing by 1000 means removing milliseconds
+    // while multiplication by 1000 means bringing seconds format back to milliseconds
+    series.datapoints[y][1] = Math.round((now - decreaser) / 1000) * 1000;
+    decreaser += 30000;
+  }
+}
+
+// update country-timeseries data set unix timestamp to most recent timestamp
+for (var i = countryTimeseries.length - 1; i >= 0; i--) {
+  var series = countryTimeseries[i];
+  var decreaser = 0;
+  for (var y = series.datapoints.length - 1; y >= 0; y--) {
+    series.datapoints[y][1] = Math.round((now - decreaser) / 1000) * 1000;
+    decreaser += 30000;
+  }
+}
+
 // initialize annotation data
 var annotation = {
   name: "annotation name",
@@ -101,28 +128,31 @@ app.post("/search", function (req, res) {
 app.post("/query", function (req, res) {
   // setCORSHeaders(res);
   console.log(req.url);
-  console.log(req.body);
+  console.log(JSON.stringify(req.body, null, 4));
 
   var tsResult = [];
   let fakeData = timeseries;
 
   // if "adhocFilters" is given from the response body"
-  if (req.body.adhocFilters && req.body.adhocFilters.length > 0) {
-    fakeData = countryTimeseries;
-  }
+  // if (req.body.adhocFilters && req.body.adhocFilters.length > 0) {
+  //   fakeData = countryTimeseries;
+  // }
 
-  // process payload with "targets" as key
+  // process "targets" as key
   _.each(req.body.targets, function (target) {
     // if "type":"table" exists push the table into the
     // temporary array tsResult
     if (target.type === "table") {
       tsResult.push(table);
     } else {
-      // if adhocFilters exist then use the countryTimeseries data
+      // if payload switch assigned to true then use the countryTimeseries data
       // if not use the timeseries data
       // both are structure as {"target":str, "datapoints":arr[arr[int,int]]}
       // timeseries JSON length 5 length datapoints 205
       // country-series JSON length 5 length datapoints 541
+      if (target.payload.switch === "True") {
+        fakeData = countryTimeseries;
+      }
 
       // below looks at any of these is in the payload
       // "target":['upper_25', 'upper_50', 'upper_75', 'upper_90', 'upper_95']
