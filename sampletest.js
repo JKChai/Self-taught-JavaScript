@@ -112,10 +112,12 @@ app.get("/", function (req, res) {
 app.post("/search", function (req, res) {
   // setCORSHeaders(res);
   var result = [];
+  var i = 0;
   _.each(timeseries, function (ts) {
     // collect target into an array
     // in this case, these targets are
     // ['upper_25', 'upper_50', 'upper_75', 'upper_90', 'upper_95']
+    i += 1;
     result.push(ts.target);
   });
 
@@ -150,11 +152,11 @@ app.post("/query", function (req, res) {
       // both are structure as {"target":str, "datapoints":arr[arr[int,int]]}
       // timeseries JSON length 5 length datapoints 205
       // country-series JSON length 5 length datapoints 541
+      // below looks at any of these is in the payload
       if (target.payload.switch === "True") {
         fakeData = countryTimeseries;
       }
 
-      // below looks at any of these is in the payload
       // "target":['upper_25', 'upper_50', 'upper_75', 'upper_90', 'upper_95']
       // if so, get that data only as k
       var k = _.filter(fakeData, function (t) {
@@ -192,6 +194,22 @@ app.post("/annotations", function (req, res) {
 // POST /tag-values returning tag values for ad hoc filters.
 
 // optional data for the optional endpoints
+
+app.post("/variable", function (req, res) {
+  console.log(req.url);
+  console.log(req.body);
+
+  _.each(req.body.targets, function (target) {
+    target.payload.target === "system";
+  });
+
+  res.json([
+    { __text: "Label 1", value: "Value1" },
+    { __text: "Label 2", value: "Value2" },
+    { __text: "Label 3", value: "Value3" },
+  ]);
+});
+
 // var tagKeys = [{ type: "string", text: "Country" }];
 // var countryTagValues = [{ text: "SE" }, { text: "DE" }, { text: "US" }];
 
@@ -240,3 +258,27 @@ app.listen(port, () => console.log(`Listening on port ${port}...`));
 //   //     decreaser += 50000;
 //   //   }
 // }
+
+/////@@##**##@@=-+-=-+-=-+-=-+-=@@##**##@@/////
+
+// // POST /search to return available metrics
+// app.post("/search", function (req, res) {
+//   // setCORSHeaders(res);
+//   var result = [];
+//   var i = 0;
+//   _.each(timeseries, function (ts) {
+//     // collect target into an array
+//     // in this case, these targets are
+//     // [ {text: 1, value: 'upper_25'},
+//     //   {text: 2, value: 'upper_50'},
+//     //   {text: 3, value: 'upper_75'},
+//     //   {text: 4, value: 'upper_90'},
+//     //   {text: 1, value: 'upper_95'}]
+//     i += 1;
+//     result.push({ text: i, value: ts.target });
+//   });
+//   // send the reponse in JSON format
+//   res.json(result);
+// });
+
+/////@@##**##@@=-+-=-+-=-+-=-+-=@@##**##@@/////
