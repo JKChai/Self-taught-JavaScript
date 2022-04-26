@@ -194,46 +194,55 @@ app.post("/annotations", function (req, res) {
 // POST /tag-values returning tag values for ad hoc filters.
 
 // optional data for the optional endpoints
-
 app.post("/variable", function (req, res) {
   console.log(req.url);
   console.log(req.body);
 
-  _.each(req.body.targets, function (target) {
-    target.payload.target === "system";
+  _.each(req.body.payload, function (target) {
+    console.log(target);
+    if (target === "systems") {
+      res.json([
+        { __text: "Label 1", value: "Value1" },
+        { __text: "Label 2", value: "Value2" },
+        { __text: "Label 3", value: "Value3" },
+      ]);
+    } else {
+      res.json([{ __text: "Label 0", value: "Value0" }]);
+    }
   });
-
-  res.json([
-    { __text: "Label 1", value: "Value1" },
-    { __text: "Label 2", value: "Value2" },
-    { __text: "Label 3", value: "Value3" },
-  ]);
 });
 
-// var tagKeys = [{ type: "string", text: "Country" }];
-// var countryTagValues = [{ text: "SE" }, { text: "DE" }, { text: "US" }];
+// working with ad-hoc filters
+// tag-keys endpoint
+var tagKeys = [
+  { type: "string", text: "City" },
+  { type: "string", text: "Country" },
+];
+var cityTagValues = [{ text: "Eins!" }, { text: "Zwei" }, { text: "Drei!" }];
+var countryTagValues = [{ text: "SE" }, { text: "DE" }, { text: "US" }];
 
-// app.all("/tag[-]keys", function (req, res) {
-//   setCORSHeaders(res);
-//   console.log(req.url);
-//   console.log(req.body);
+app.post("/tag[-]keys", function (req, res) {
+  // setCORSHeaders(res);
+  console.log(req.url);
+  console.log(req.body);
 
-//   res.json(tagKeys);
-//   res.end();
-// });
+  res.json(tagKeys);
+  // res.end();
+});
 
-// app.all("/tag[-]values", function (req, res) {
-//   setCORSHeaders(res);
-//   console.log(req.url);
-//   console.log(req.body);
+// tag-values endpoint
+app.post("/tag[-]values", function (req, res) {
+  // setCORSHeaders(res);
+  console.log(req.url);
+  console.log(req.body);
 
-//   if (req.body.key == "City") {
-//     res.json(cityTagValues);
-//   } else if (req.body.key == "Country") {
-//     res.json(countryTagValues);
-//   }
-//   res.end();
-// });
+  if (req.body.key == "City") {
+    res.json(cityTagValues);
+  } else if (req.body.key == "Country") {
+    res.json(countryTagValues);
+  }
+  // res.end();
+});
 
 // setting up ports
 port = process.env.PORT || 3090;
